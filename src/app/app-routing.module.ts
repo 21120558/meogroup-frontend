@@ -7,12 +7,7 @@ import { AuthenModule } from './authen/authen.module';
 const routes: Routes = [
   { path: 'homepage', loadChildren: () => HomepageModule},
   { path: '', redirectTo: 'homepage', pathMatch: 'full'},
-  { 
-    path: 'users', 
-    children: [
-      { path: '', loadChildren: () => AuthenModule },
-    ]
-  },
+  { path: 'user', loadChildren: () => AuthenModule }
 ];
 
 @NgModule({

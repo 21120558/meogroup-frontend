@@ -1,15 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthenRoutingModule } from './authen-routing.module';
-import { SigninPageComponent } from './signin-page/signin-page.component';
+import { AuthenPageComponent } from './authen.component';
 import { AuthenService } from './authen.service';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { SigninComponent } from './signin/signin.component';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
-    SigninPageComponent,
+    AuthenPageComponent,
+    SigninComponent,
+    SignupComponent,
   ],
   imports: [
     CommonModule,

@@ -12,7 +12,7 @@
         </ul>
         <p *ngIf="isAuthenticated" class="nav-username"><span>{{ getUsername() }}</span></p>
         <div>
-            <a *ngIf="!isAuthenticated" class="navbar-signin-button" routerLink="/users/signin">Sign in</a>
+            <a *ngIf="!isAuthenticated" class="navbar-signin-button" routerLink="/user/signin">Sign in</a>
             <a *ngIf="isAuthenticated" class="navbar-signin-button" (click)="onLogout()">Log out</a>
         </div>
     </div>

@@ -1,18 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators'
+import { catchError, tap, map } from 'rxjs/operators'
 import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
 import jwtDecode from 'jwt-decode';
+import { of, throwError } from 'rxjs';
 
-const API = 'http://localhost:3000/api/v1/users/signin';
+const SIGNIN_API = 'http://localhost:3000/api/v1/users/signin';
+const SIGNUP_API= 'http://localhost:3000/api/v1/users/signup';
 const GET_USER_API = 'http://localhost:3000/api/v1/users';
 
 interface DecodedToken {
   id: string;
   username: string;
 };
+
+interface RegisInfo {
+    username: string,
+    password: string,
+    confirmPassword: string,
+    fullname: string,
+    phone: string,
+    email: string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +44,7 @@ export class AuthenService {
 
   login(username: string, password: string): Observable<any> {
     const credentials = { username: username, password: password };
-    return this.http.post(API, credentials).pipe(
+    return this.http.post(SIGNIN_API, credentials).pipe(
       tap((response: any) => {
         const token = response.token;
         const decodeToken = jwtDecode(token) as DecodedToken;
@@ -43,6 +54,17 @@ export class AuthenService {
       })
     )
   };
+
+  signup(regisInfo: RegisInfo): Observable<any> {
+    return this.http.post(SIGNUP_API, regisInfo).pipe(
+      map((res : any) => {
+        return res;
+      }),
+      catchError((error: any) => {
+        return throwError(error);
+      })
+    )
+  }
 
   logout(): void {
     this.cookie.delete('token');

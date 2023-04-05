@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { RouteConfigLoadEnd, RouteConfigLoadStart } from '@angular/router';
 
 @Component({
   selector: 'app-homepage',
@@ -6,4 +8,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./homepage.component.css']
 })
 
-export class HomepageComponent {}
+export class HomepageComponent {};

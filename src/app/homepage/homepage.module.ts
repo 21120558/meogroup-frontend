@@ -12,7 +12,7 @@ import { AuthenModule } from '../authen/authen.module';
   declarations: [
     HomepageComponent,
     HeaderComponent,
-    HeroSectionComponent
+    HeroSectionComponent,
   ],
   imports: [
     CommonModule,

@@ -1,15 +1,15 @@
-import { Component, OnDestroy } from '@angular/core';
-import { AuthenService } from '../authen.service';
+import { AuthenService } from './authen.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Component, ViewChild, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
 
 @Component({
-  selector: 'app-signin-page',
-  templateUrl: './signin-page.component.html',
-  styleUrls: ['./signin-page.component.css']
+  selector: 'app-authen-page',
+  templateUrl: './authen.component.html',
+  styleUrls: ['./authen.component.css']
 })
 
-export class SigninPageComponent {
+export class AuthenPageComponent {
   username: string = '';
   password: string = '';
 
