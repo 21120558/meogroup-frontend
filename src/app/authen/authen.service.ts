@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators'
 import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
 import jwtDecode from 'jwt-decode';
-import { of, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 
 const SIGNIN_API = 'http://localhost:3000/api/v1/users/signin';
 const SIGNUP_API= 'http://localhost:3000/api/v1/users/signup';
 const GET_USER_API = 'http://localhost:3000/api/v1/users';
+const CHECK_USERNAME_API = 'http://localhost:3000/api/v1/users/check-username';
+const CHECK_PHONE_API = 'http://localhost:3000/api/v1/users/check-phone';
+const CHECK_EMAIL_API = 'http://localhost:3000/api/v1/users/check-email';
 
 interface DecodedToken {
   id: string;
@@ -18,9 +21,6 @@ interface DecodedToken {
 
 interface RegisInfo {
     username: string,
-    password: string,
-    confirmPassword: string,
-    fullname: string,
     phone: string,
     email: string
 }
@@ -76,7 +76,23 @@ export class AuthenService {
     return !!this.cookie.get('token');
   }
 
+  checkUsernameExist( username: string ): Observable<HttpResponse<any>> {
+    const params = {username: username}
+    return this.http.get(CHECK_USERNAME_API, { observe: 'response', responseType: 'text', params: params})
+  }
+
+  checkPhoneExist( phone: string ): Observable<HttpResponse<any>> {
+    const params = { phone: phone }
+    return this.http.get(CHECK_PHONE_API, { observe: 'response', responseType: 'text', params: params})
+  }
+
+  checkEmailExist(email: string): Observable<HttpResponse<any>> {
+    const params = { email: email}
+    return this.http.get(CHECK_EMAIL_API, { observe: 'response', responseType: 'text', params: params})
+  }
+
   get getUsername() {
     return this.cookie.get('username');
   }
+
 }
