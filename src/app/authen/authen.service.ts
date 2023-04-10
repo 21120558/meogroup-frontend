@@ -56,7 +56,7 @@ export class AuthenService {
   };
 
   signup(regisInfo: RegisInfo): Observable<any> {
-    return this.http.post(SIGNUP_API, regisInfo).pipe(
+    return this.http.post(SIGNUP_API, regisInfo, { responseType: 'text' }).pipe(
       map((res : any) => {
         return res;
       }),
@@ -78,17 +78,17 @@ export class AuthenService {
 
   checkUsernameExist( username: string ): Observable<HttpResponse<any>> {
     const params = {username: username}
-    return this.http.get(CHECK_USERNAME_API, { observe: 'response', responseType: 'text', params: params})
+    return this.http.get(CHECK_USERNAME_API, { observe: 'response', responseType: 'json', params: params})
   }
 
   checkPhoneExist( phone: string ): Observable<HttpResponse<any>> {
     const params = { phone: phone }
-    return this.http.get(CHECK_PHONE_API, { observe: 'response', responseType: 'text', params: params})
+    return this.http.get(CHECK_PHONE_API, { observe: 'response', responseType: 'json', params: params})
   }
 
   checkEmailExist(email: string): Observable<HttpResponse<any>> {
     const params = { email: email}
-    return this.http.get(CHECK_EMAIL_API, { observe: 'response', responseType: 'text', params: params})
+    return this.http.get(CHECK_EMAIL_API, { observe: 'response', responseType: 'json', params: params})
   }
 
   get getUsername() {

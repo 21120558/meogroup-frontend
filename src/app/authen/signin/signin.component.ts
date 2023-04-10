@@ -31,4 +31,8 @@ export class SigninComponent {
   toForgot() {
     this.router.navigate(['/homepage']);
   }
+
+  toHomepage() {
+    this.router.navigate(['/homepage']);
+  }
 }
