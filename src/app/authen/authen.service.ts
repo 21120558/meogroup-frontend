@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators'
 import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
@@ -10,6 +10,8 @@ import { throwError } from 'rxjs';
 const SIGNIN_API = 'http://localhost:3000/api/v1/users/signin';
 const SIGNUP_API= 'http://localhost:3000/api/v1/users/signup';
 const GET_USER_API = 'http://localhost:3000/api/v1/users';
+const VERIFY_USER_API = 'http://localhost:3000/api/v1/users/verify';
+const CHECK_VERIFY_TOKEN_API = 'http://localhost:3000/api/v1/users/check-verify-token';
 const CHECK_USERNAME_API = 'http://localhost:3000/api/v1/users/check-username';
 const CHECK_PHONE_API = 'http://localhost:3000/api/v1/users/check-phone';
 const CHECK_EMAIL_API = 'http://localhost:3000/api/v1/users/check-email';
@@ -20,9 +22,19 @@ interface DecodedToken {
 };
 
 interface RegisInfo {
-    username: string,
-    phone: string,
-    email: string
+  username: string,
+  phone: string,
+  email: string
+}
+
+interface VerifyInfo {
+  password: string,
+  confirmPassword: string,
+  fullname: string,
+}
+
+interface CheckResponse{
+  message: string
 }
 
 @Injectable({
@@ -65,15 +77,45 @@ export class AuthenService {
       })
     )
   }
-
+  
   logout(): void {
     this.cookie.delete('token');
     this.cookie.delete('username');
     this.loginStatusChanged.next(false)
   }
 
+  verify(formData: FormData): Observable<HttpResponse<any>> {
+      return this.http.post(VERIFY_USER_API, formData, { responseType: 'text'} ).pipe(
+        map((res : any) => {
+          return res;
+        }),
+        catchError((error: any) => {
+          return throwError(error);
+        })
+      )
+  }
+
   isAuthenticated(): boolean {
     return !!this.cookie.get('token');
+  }
+
+  checkVerifyToken( verifyToken: string ): Observable<boolean> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${verifyToken}`);
+
+    return this.http.get<CheckResponse>(CHECK_VERIFY_TOKEN_API, { headers: headers, responseType: 'json'}).pipe(
+      map(response => {
+        if (response.message === 'found') {
+          return true;
+        } else {
+          return false;
+        }
+      }),
+      catchError(error => {
+        console.log(error)
+        
+        return of(false);
+      })
+    );
   }
 
   checkUsernameExist( username: string ): Observable<HttpResponse<any>> {

@@ -36,7 +36,7 @@ export class SignupComponent implements OnInit {
         validators: [
           Validators.required, 
           Validators.minLength(6),
-          Validators.pattern(/^[a-zA-Z0-9]+/)
+          Validators.pattern(/^[a-zA-Z0-9]+$/)
         ],
         asyncValidators: [existingUsernameValidator(this.authenService.checkUsernameExist.bind(this.authenService))],
         updateOn: 'blur'
@@ -148,7 +148,7 @@ export class SignupComponent implements OnInit {
   }
 
   async onSubmit() {
-    await this.signUpForm.updateValueAndValidity();
+    this.signUpForm.updateValueAndValidity();
     if (this.signUpForm.valid) {
       const regisInfo = {
         username: this.signUpForm.get('username')?.value,
@@ -162,7 +162,6 @@ export class SignupComponent implements OnInit {
         },
         error: () => {}
       });
-
     }
   }
 }

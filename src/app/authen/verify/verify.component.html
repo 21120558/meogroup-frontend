@@ -1,0 +1,131 @@
+<div class="w-full h-full flex flex-col items-center verify-container">
+    <div class="basis-3/12 flex items-center">
+        <img (click)="toHomepage()" class="verify-logo cursor-pointer" src="../../../assets/logo/conmeo-logo.svg">
+    </div>
+    <p class="verify-welcome basis-1/12">Welcome to Meohome</p>
+    <div class="flex items-center justify-center w-full basis-8/12 verify-form-container">
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit()"
+                [formGroup]="verifyForm" class="w-full h-full">
+            <div *ngIf="isStep1()" class="flex flex-col items-center verify-form w-full h-full verify-info-container" >
+                <div class="verify-field">
+                    <label for="password">Password</label>
+                    <div [ngClass]="{ 'verify-field-input--focus': isPasswordFocus}" class="verify-field-input ">
+                        <img class="verify-field-logo" src="../../../assets/verify/logo/pass-logo.svg">
+                        <input [ngClass]="{'verify-field-instructor': passwordControl?.pristine}" 
+                                (click)="onClickPassword()" 
+                                (blur)="passwordUpdateMatch(); isPasswordFocus = false"
+                                (keydown.tab)="onClickConfirmPass()"
+                                (keydown.enter)="onNext()"
+                                formControlName="password" 
+                                [type]="!passwordControl?.pristine ? 'password' : 'text'" name="username" class="flex-grow"/>
+                        <svg *ngIf="!passwordControl?.pristine && !validatePassword()" class="verify-field-checklogo" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+                            <image xlink:href="../../../assets/validate/check.svg" width="12" height="12" />
+                        </svg>
+                    </div>
+                    <div class="verify-field-placeholder">
+                        <div *ngIf="validatePassword()" class="verify-field-warning">
+                            <div *ngIf="getPasswordError() === 'unexpectedError'">
+                                Unexpected error
+                            </div>
+                            <div *ngIf="getPasswordError() === 'required'">
+                                Password is required
+                            </div>
+                            <div *ngIf="getPasswordError() === 'minlength'">
+                                Minimum length is 8
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="verify-field">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div [ngClass]="{ 'verify-field-input--focus': isConfirmPassFocus}" class="verify-field-input ">
+                        <img class="verify-field-logo" src="../../../assets/verify/logo/pass-logo.svg">
+                        <input [ngClass]="{'verify-field-instructor': confirmPassControl?.pristine}" 
+                                (click)="onClickConfirmPass()" 
+                                (blur)="passwordUpdateMatch(); isConfirmPassFocus = false"
+                                (keydown.tab)="onClickName()"
+                                (keydown.enter)="onNext()"
+                                formControlName="confirmPassword" 
+                                [type]="!confirmPassControl?.pristine ? 'password' : 'text'" name="confirmPassword" class="flex-grow"/>
+                        <svg *ngIf="!confirmPassControl?.pristine && !validateConfirmPass()" class="verify-field-checklogo" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+                            <image xlink:href="../../../assets/validate/check.svg" width="12" height="12" />
+                        </svg>
+                    </div>
+                    <div class="verify-field-placeholder">
+                        <div *ngIf="validateConfirmPass()" class="verify-field-warning">
+                            <div *ngIf="getConfirmPassError() === 'unexpectedError'">
+                                Unexpected error
+                            </div>
+                            <div *ngIf="getConfirmPassError() === 'notMatch'">
+                                Confirm password does not match
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="verify-field">
+                    <label for="name">Fullname</label>
+                    <div [ngClass]="{ 'verify-field-input--focus': isNameFocus }" class="verify-field-input ">
+                        <img class="verify-field-logo" src="../../../assets/verify/logo/name-logo.svg">
+                        <input [ngClass]="{'verify-field-instructor': nameControl?.pristine}" 
+                                (click)="onClickName()" 
+                                (blur)="verifyForm.get('name')?.updateValueAndValidity(); isNameFocus = false"
+                                (keydown.enter)="onNext()"
+                                formControlName="name" 
+                                type="text" name="username" class="flex-grow"/>
+                        <svg *ngIf="!nameControl?.pristine" class="verify-field-checklogo" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+                            <image xlink:href="../../../assets/validate/check.svg" width="12" height="12" />
+                        </svg>
+                    </div>
+                    <div class="verify-field-placeholder">
+                        <div *ngIf="validateName()" class="verify-field-warning">
+                            <div *ngIf="getNameError() === 'unexpectedError'">
+                                Unexpected error
+                            </div>
+                            <div *ngIf="getNameError() === 'required'">
+                                Fullname is required
+                            </div>
+                            <div *ngIf="getNameError() === 'pattern'">
+                                Invalid fullname format
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="verify-field button">
+                    <a class="next-button" (click)="onNext()">Next</a>
+                </div>
+            </div>
+            <div [class.hidden]="!isStep2()" class="flex flex-col items-center w-full h-full">
+                <div class=" basis-1/6 flex items-center"><p class="verify-noti-upload">Upload your avatar</p></div>
+                <div class="verify-avatar-container w-full h-full basis-3/6 flex flex-col items-center gap-6">
+                    <div (click)="imageInput.click()" class="verify-avatar flex items-center justify-center overflow-hidden">
+                        <img *ngIf="!imgSource" src="../../../assets/verify/upload-mark.svg" class="verify-avatar-uploadlogo">
+                        <img *ngIf="imgSource" [src]="imgSource" class="w-full h-full object-cover">
+                        <input #imageInput
+                                type="file"
+                                class="hidden" 
+                                (change)="onUploadAvatar($event)"
+                                accept="image/jpg, image/jpeg, image/png"
+                                formControlName="avatar">
+                    </div>
+                    <div class="verify-avatar-placeholder">
+                        <div *ngIf="validateAvatar()" class="verify-avatar-warning">
+                            <div *ngIf="getAvatarError() === 'unexpectedError'">
+                                Unexpected error
+                            </div>
+                            <div *ngIf="getAvatarError() === 'required'">
+                                Required
+                            </div>
+                            <div *ngIf="getAvatarError() === 'invalidFileType'">
+                                Invalid filetype
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="basis-2/6 h-full">
+                    <button type="submit" class="complete-button">Complete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

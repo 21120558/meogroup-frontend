@@ -10,6 +10,7 @@
             <div class="signup-field">
                 <label for="username">Username</label>
                 <div [ngClass]="{ 'signup-field-input--focus': isUsernameFocus }" class="signup-field-input ">
+                    <img class="signup-field-logo" src="../../../assets/signup/logo/user-logo.svg">
                     <input [ngClass]="{'signup-field-instructor': !isUsernameClicked}" 
                             (click)="onClickUsername()" 
                             (keydown.tab)="onClickPhone()"
@@ -43,6 +44,7 @@
             <div class="signup-field">
                 <label for="phone">Phone</label>
                 <div [ngClass]="{ 'signup-field-input--focus': isPhoneFocus }" class="signup-field-input">
+                    <img class="signup-field-logo" src="../../../assets/signup/logo/phone-logo.svg">
                     <input formControlName="phone" 
                             [ngClass]="{ 'signup-field-instructor': !isPhoneClicked}"
                             (keydown.tab)="onClickEmail()"
@@ -73,10 +75,11 @@
             <div class="signup-field">
                 <label for="email">Email</label>
                 <div [ngClass]="{ 'signup-field-input--focus': isEmailFocus }" class="signup-field-input">
+                    <img class="signup-field-logo" src="../../../assets/signup/logo/email-logo.svg">
                     <input formControlName="email" 
                             [ngClass]="{'signup-field-instructor': !isEmailClicked}"
                             (click)="onClickEmail()"
-                            (blur)="signUpForm.get('email')?.updateValueAndValidity()"
+                            (blur)="signUpForm.get('email')?.updateValueAndValidity(); isEmailFocus = false"
                             type="email" name="email" class="flex-grow">
                     <svg *ngIf="isEmailClicked && !validateEmail()" class="signup-field-checklogo" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
                         <image xlink:href="../../../assets/validate/check.svg" width="12" height="12" />
