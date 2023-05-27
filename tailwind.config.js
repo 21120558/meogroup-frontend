@@ -8,7 +8,7 @@ module.exports = {
     "./src/app/authen/authen.component.{html,ts}",
     "./src/app/authen/signin/signin.component.{html,ts}",
     "./src/app/authen/signup/signup.component.{html,ts}",
-    "./src/app/authen/verify/verify.component.{html,ts}",
+    "./src/app/authen/complete-regis/complete-regis.component.{html,ts}",
   ],
   theme: {
     extend: {},

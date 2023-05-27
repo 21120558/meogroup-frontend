@@ -1,17 +1,20 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenService } from '../authen.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
-import { avatarFileTypeValidator, avatarRequired, matchValidator } from './verify-validator';
+import { avatarFileTypeValidator, avatarRequired, matchValidator } from './complete-regis-validator';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { first } from 'rxjs';
+
 
 @Component({
-  selector: 'app-verify',
-  templateUrl: './verify.component.html',
-  styleUrls: ['./verify.component.css']
+  selector: 'app-complete-regis',
+  templateUrl: './complete-regis.component.html',
+  styleUrls: ['./complete-regis.component.css']
 })
-export class VerifyComponent {
+
+export class CompleteRegisComponent{
   @ViewChild('imageInput') imageInput!: ElementRef;
   imgSource: string | ArrayBuffer | null = null;
   private avatarFileSubject: ReplaySubject<File | null> = new ReplaySubject(1);
@@ -27,8 +30,9 @@ export class VerifyComponent {
   isConfirmPassFocus: boolean = false;
   isNameFocus: boolean = false;
 
-  verifyForm!: FormGroup;
+  completeRegisForm!: FormGroup;
   step: number = 1;
+  isSubmit: boolean = true;
   isStep1(): boolean {
     return this.step === 1;
   }
@@ -41,10 +45,11 @@ export class VerifyComponent {
     private formBuilder: FormBuilder,
     private authenService: AuthenService,
     private router: Router,
+    private route: ActivatedRoute
   ) {};
 
   ngOnInit(): void {
-    this.verifyForm = this.formBuilder.group({
+    this.completeRegisForm = this.formBuilder.group({
       password: this.formBuilder.control('Enter your password', {
         validators: [
           Validators.required,
@@ -72,15 +77,15 @@ export class VerifyComponent {
       }),
     });
 
-    this.passwordControl = this.verifyForm.get('password');
-    this.confirmPassControl = this.verifyForm.get('confirmPassword');
-    this.nameControl = this.verifyForm.get('name');
-    this.avatarControl = this.verifyForm.get('avatar');
+    this.passwordControl = this.completeRegisForm.get('password');
+    this.confirmPassControl = this.completeRegisForm.get('confirmPassword');
+    this.nameControl = this.completeRegisForm.get('name');
+    this.avatarControl = this.completeRegisForm.get('avatar');
   }
 
   passwordUpdateMatch() {
-    this.verifyForm.get('password')?.updateValueAndValidity();
-    this.verifyForm.get('confirmPassword')?.updateValueAndValidity();
+    this.completeRegisForm.get('password')?.updateValueAndValidity();
+    this.completeRegisForm.get('confirmPassword')?.updateValueAndValidity();
   }
 
   onClickPassword() {
@@ -116,7 +121,7 @@ export class VerifyComponent {
     return this.confirmPassControl?.invalid && (this.confirmPassControl?.dirty || this.confirmPassControl?.touched);
   }
   getConfirmPassError(): string {
-    const passwordControl = this.verifyForm.get('confirmPassword');
+    const passwordControl = this.completeRegisForm.get('confirmPassword');
     if (passwordControl?.hasError('unexpectedError')) {
       return 'unexpectedError';
     }
@@ -135,7 +140,7 @@ export class VerifyComponent {
     return this.nameControl?.invalid && (this.nameControl?.dirty || this.nameControl?.touched);
   }
   getNameError(): string {
-    const nameControl = this.verifyForm.get('name');
+    const nameControl = this.completeRegisForm.get('name');
     if (nameControl?.hasError('unexpectedError')) {
       return 'unexpectedError';
     } 
@@ -181,7 +186,7 @@ export class VerifyComponent {
     return this.avatarControl?.invalid && (this.avatarControl?.touched || this.avatarControl?.dirty);
   }
   getAvatarError() {
-    const avatarControl = this.verifyForm.get('avatar');
+    const avatarControl = this.completeRegisForm.get('avatar');
     if (avatarControl?.hasError('invalidFileType')) {
       return 'invalidFileType'
     }
@@ -219,24 +224,27 @@ export class VerifyComponent {
     this.confirmPassControl?.markAsTouched();
   }
 
-  onSubmit() {
-    this.verifyForm.updateValueAndValidity();
-    if(this.verifyForm.valid) {
-      const formData = new FormData();
-      formData.append('password', this.verifyForm.get('password')?.value);
-      formData.append('confirmPassword', this.verifyForm.get('confirmPassword')?.value);
-      formData.append('fullname', this.verifyForm.get('name')?.value);
-      console.log(this.avatarFile?.type)
-      console.log(this.avatarFile)
-      formData.append('avatar', this.avatarFile!);
-      this.authenService.verify(formData).subscribe({
-        next: () => {
-          console.log('hello')
-        },
-        error: () => {
-          console.log('hi')
-        }
-      });
+  onSubmit(){
+    this.completeRegisForm.updateValueAndValidity();
+    
+    if(this.completeRegisForm.valid) {
+      this.route.queryParams.pipe(first()).toPromise().then(queryParams=> {
+        console.log(queryParams)
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${queryParams?.['completeRegisToken']}`);
+        const formData = new FormData();
+        formData.append('password', this.completeRegisForm.get('password')?.value);
+        formData.append('confirmPassword', this.completeRegisForm.get('confirmPassword')?.value);
+        formData.append('fullname', this.completeRegisForm.get('name')?.value);
+        formData.append('avatar', this.avatarFile!);
+        this.authenService.completeRegis(headers, formData).subscribe({
+          next: () => {
+            this.isSubmit = true;
+          },
+          error: () => {
+            console.log('hi')
+          }
+        });
+        })
     } else {
       this.avatarFileSubject.next(this.avatarFile || null);
       this.avatarControl?.markAsTouched();

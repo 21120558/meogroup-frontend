@@ -7,14 +7,15 @@ import { AuthenService } from './authen.service';
 @Injectable({
   providedIn: 'root'
 })
-export class VerifyGuard implements CanActivate {
+export class CompleteRegisGuard implements CanActivate {
   constructor(private authenService: AuthenService) {};
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      const verifyToken = route.queryParams['verifyToken'];
-      return this.authenService.checkVerifyToken(verifyToken).pipe(
+      const completeRegisToken = route.queryParams['completeRegisToken'];
+      return this.authenService.checkCompleteRegisToken(completeRegisToken).pipe(
         map(result => {
+          console.log(result)
           return result;
         }),
         catchError(error => {

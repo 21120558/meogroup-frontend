@@ -2,7 +2,7 @@
     <div class="basis-3/12 flex items-center">
         <img (click)="toHomepage()" class="signup-logo cursor-pointer" src="../../../assets/logo/conmeo-logo.svg">
     </div>
-    <p class="signup-welcome basis-1/12">Welcome to Meohome</p>
+    <p class="signup-welcome basis-1/12">Account Registration</p>
     <div *ngIf="!isSubmit" class="flex items-center justify-center w-full basis-8/12 signup-form-container">
         <form #loginForm="ngForm" (ngSubmit)="onSubmit()"
                 [formGroup]="signUpForm" 

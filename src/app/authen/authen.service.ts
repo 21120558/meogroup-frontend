@@ -9,9 +9,8 @@ import { throwError } from 'rxjs';
 
 const SIGNIN_API = 'http://localhost:3000/api/v1/users/signin';
 const SIGNUP_API= 'http://localhost:3000/api/v1/users/signup';
-const GET_USER_API = 'http://localhost:3000/api/v1/users';
-const VERIFY_USER_API = 'http://localhost:3000/api/v1/users/verify';
-const CHECK_VERIFY_TOKEN_API = 'http://localhost:3000/api/v1/users/check-verify-token';
+const COMPLETE_REGIS_API = 'http://localhost:3000/api/v1/users/complete-regis';
+const CHECK_COMPLETE_REGIS_TOKEN_API = 'http://localhost:3000/api/v1/users/check-complete-regis-token';
 const CHECK_USERNAME_API = 'http://localhost:3000/api/v1/users/check-username';
 const CHECK_PHONE_API = 'http://localhost:3000/api/v1/users/check-phone';
 const CHECK_EMAIL_API = 'http://localhost:3000/api/v1/users/check-email';
@@ -27,12 +26,6 @@ interface RegisInfo {
   email: string
 }
 
-interface VerifyInfo {
-  password: string,
-  confirmPassword: string,
-  fullname: string,
-}
-
 interface CheckResponse{
   message: string
 }
@@ -45,14 +38,6 @@ export class AuthenService {
   loginStatusChanged = new Subject<boolean>();
 
   constructor(private http: HttpClient, private cookie: CookieService) {};
-
-  getUser(): Observable<any> {
-    const token = this.cookie.get('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    const options = { headers: headers };
-
-    return this.http.get(GET_USER_API, options);
-  }
 
   login(username: string, password: string): Observable<any> {
     const credentials = { username: username, password: password };
@@ -67,12 +52,15 @@ export class AuthenService {
     )
   };
 
-  signup(regisInfo: RegisInfo): Observable<any> {
-    return this.http.post(SIGNUP_API, regisInfo, { responseType: 'text' }).pipe(
-      map((res : any) => {
+  signup(regisInfo: RegisInfo): Observable<HttpResponse<any>> {
+    return this.http.post(SIGNUP_API, regisInfo, { responseType: 'json', observe: 'response' }).pipe(
+      map((res : HttpResponse<any>) => {
+        console.log(res);
+
         return res;
       }),
       catchError((error: any) => {
+        console.log(error);
         return throwError(error);
       })
     )
@@ -84,8 +72,8 @@ export class AuthenService {
     this.loginStatusChanged.next(false)
   }
 
-  verify(formData: FormData): Observable<HttpResponse<any>> {
-      return this.http.post(VERIFY_USER_API, formData, { responseType: 'text'} ).pipe(
+  completeRegis(headers: HttpHeaders, formData: FormData): Observable<HttpResponse<any>> {
+      return this.http.post(COMPLETE_REGIS_API, formData, { headers: headers, responseType: 'text'} ).pipe(
         map((res : any) => {
           return res;
         }),
@@ -99,21 +87,22 @@ export class AuthenService {
     return !!this.cookie.get('token');
   }
 
-  checkVerifyToken( verifyToken: string ): Observable<boolean> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${verifyToken}`);
+  checkCompleteRegisToken( completeRegisToken: string ): Observable<boolean> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${completeRegisToken}`);
 
-    return this.http.get<CheckResponse>(CHECK_VERIFY_TOKEN_API, { headers: headers, responseType: 'json'}).pipe(
+    return this.http.get<CheckResponse>(CHECK_COMPLETE_REGIS_TOKEN_API, { headers: headers, responseType: 'json'}).pipe(
       map(response => {
+        console.log(response)
         if (response.message === 'found') {
           return true;
         } else {
-          return false;
+          return true;
         }
       }),
       catchError(error => {
         console.log(error)
         
-        return of(false);
+        return of(true);
       })
     );
   }

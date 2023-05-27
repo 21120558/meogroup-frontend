@@ -22,7 +22,7 @@ export class SignupComponent implements OnInit {
   isEmailFocus: boolean = false;
 
   signUpForm!: FormGroup;
-  isSubmit: boolean = false;
+  isSubmit: boolean = true;
 
   constructor(
     private formBuilder: FormBuilder,
