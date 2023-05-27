@@ -1,13 +1,13 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, catchError, map, of } from 'rxjs';
 import { AuthenService } from './authen.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CompleteRegisGuard implements CanActivate {
+export class CompleteRegisGuard  {
   constructor(private authenService: AuthenService) {};
   canActivate(
     route: ActivatedRouteSnapshot,
