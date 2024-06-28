@@ -8,12 +8,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
+import { CompleteRegisComponent } from './complete-regis/complete-regis.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AuthenPageComponent,
     SigninComponent,
     SignupComponent,
+    CompleteRegisComponent
   ],
   imports: [
     CommonModule,
@@ -21,6 +24,7 @@ import { SignupComponent } from './signup/signup.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AuthenService,

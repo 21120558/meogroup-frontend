@@ -1,38 +1,120 @@
 <div class="w-full h-full flex flex-col items-center signup-container">
-    <div class="basis-3/12 grid grid-cols-1 place-items-center">
-        <img class="signup-logo" src="../../../assets/logo/conmeo-logo.png">
+    <div class="basis-3/12 flex items-center">
+        <img (click)="toHomepage()" class="signup-logo cursor-pointer" src="../../../assets/logo/conmeo-logo.svg">
     </div>
-    <p class="signup-welcome basis-1/12">Welcome to Meohome</p>
-    <form class="flex flex-col items-center w-full signup-form-container basis-8/12" #loginForm="ngForm" (ngSubmit)="onSubmit()">
-        <div class="signup-field flex-1">
-            <label for="username">Username</label>
-            <input type="text" [(ngModel)]="username" name="username" required/>
-        </div>
-        <div class="flex flex-row items-center justify-between signup-password-field">
-            <div class="flex flex-col signup-pass">
-                <label for="password">Password</label>
-                <input type="password" [(ngModel)]="password" name="password" required>
+    <p class="signup-welcome basis-1/12">Account Registration</p>
+    <div *ngIf="!isSubmit" class="flex items-center justify-center w-full basis-8/12 signup-form-container">
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit()"
+                [formGroup]="signUpForm" 
+                class="flex flex-col items-center signup-form w-full h-full" >
+            <div class="signup-field">
+                <label for="username">Username</label>
+                <div [ngClass]="{ 'signup-field-input--focus': isUsernameFocus }" class="signup-field-input ">
+                    <img class="signup-field-logo" src="../../../assets/signup/logo/user-logo.svg">
+                    <input [ngClass]="{'signup-field-instructor': !isUsernameClicked}" 
+                            (click)="onClickUsername()" 
+                            (keydown.tab)="onClickPhone()"
+                            (blur)="signUpForm.get('username')?.updateValueAndValidity(); isUsernameFocus = false"
+                            formControlName="username" 
+                            type="text" name="username" class="flex-grow"/>
+                    <svg *ngIf="isUsernameClicked && !validateUsername()" class="signup-field-checklogo" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+                        <image xlink:href="../../../assets/validate/check.svg" width="12" height="12" />
+                    </svg>
+                </div>
+                <div class="signup-field-placeholder">
+                    <div *ngIf="validateUsername()" class="signup-field-warning">
+                        <div *ngIf="getUsernameError() === 'existingUsername'">
+                            Username has already been used
+                        </div>
+                        <div *ngIf="getUsernameError() === 'unexpectedError'">
+                            Unexpected error
+                        </div>
+                        <div *ngIf="getUsernameError() === 'required'">
+                            Username is required
+                        </div>
+                        <div *ngIf="getUsernameError() === 'minlength'">
+                            Minimum length is 6
+                        </div>
+                        <div *ngIf="getUsernameError() === 'pattern'">
+                            Invalid username format
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="flex flex-col signup-pass">
-                <label for="password">Confirm Password</label>
-                <input type="password" [(ngModel)]="confirmPassword" name="password" required>
+            <div class="signup-field">
+                <label for="phone">Phone</label>
+                <div [ngClass]="{ 'signup-field-input--focus': isPhoneFocus }" class="signup-field-input">
+                    <img class="signup-field-logo" src="../../../assets/signup/logo/phone-logo.svg">
+                    <input formControlName="phone" 
+                            [ngClass]="{ 'signup-field-instructor': !isPhoneClicked}"
+                            (keydown.tab)="onClickEmail()"
+                            (click)="onClickPhone()"
+                            (blur)="signUpForm.get('phone')?.updateValueAndValidity(); isPhoneFocus = false"
+                            type="phone" name="phone" class="flex-grow">
+                    <svg *ngIf="isPhoneClicked && !validatePhone()" class="signup-field-checklogo" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+                        <image xlink:href="../../../assets/validate/check.svg" width="12" height="12" />
+                    </svg>
+                </div>
+                <div class="signup-field-placeholder">
+                    <div *ngIf="validatePhone()" class="signup-field-warning">
+                        <div *ngIf="getPhoneError() === 'unexpectedError'">
+                            Unexpected error
+                        </div>
+                        <div *ngIf="getPhoneError() === 'existingPhone'">
+                            Phone has already been used
+                        </div>
+                        <div *ngIf="getPhoneError() === 'required'">
+                            Phone is required
+                        </div>
+                        <div *ngIf="getPhoneError() === 'pattern'">
+                            Invalid phone number format
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="signup-field">
+                <label for="email">Email</label>
+                <div [ngClass]="{ 'signup-field-input--focus': isEmailFocus }" class="signup-field-input">
+                    <img class="signup-field-logo" src="../../../assets/signup/logo/email-logo.svg">
+                    <input formControlName="email" 
+                            [ngClass]="{'signup-field-instructor': !isEmailClicked}"
+                            (click)="onClickEmail()"
+                            (blur)="signUpForm.get('email')?.updateValueAndValidity(); isEmailFocus = false"
+                            type="email" name="email" class="flex-grow">
+                    <svg *ngIf="isEmailClicked && !validateEmail()" class="signup-field-checklogo" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+                        <image xlink:href="../../../assets/validate/check.svg" width="12" height="12" />
+                    </svg>
+                </div>
+                <div class="signup-field-placeholder">
+                    <div *ngIf="validateEmail()" class="signup-field-warning">
+                        <div *ngIf="getEmailError() === 'unexpectedError'">
+                            Unexpected error
+                        </div>
+                        <div *ngIf="getEmailError() === 'existingEmail'">
+                            Email has already been used
+                        </div>
+                        <div *ngIf="getEmailError() === 'required'">
+                            Email is required
+                        </div>
+                        <div *ngIf="getEmailError() === 'pattern'">
+                            Invalid format email
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="signup-field button">
+                <button class="signup-button" type="submit">Sign up</button>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="isSubmit" class="flex flex-col items-center basis-8/12">
+        <div class="signup-container-noti basis-1/2 gap-8 flex flex-col items-center" >
+            <img class="signup-noti-logo" src="../../../assets/logo/nontext-logo.svg">        
+            <div class="signup-noti-sent flex items-center justify-center h-full"><p class="text-center">AN EMAIL<br>HAS BEEN SENT</p></div>
         </div>
-        <div class="signup-field">
-            <label for="fullname">Fullname</label>
-            <input type="fullname" [(ngModel)]="fullname" name="fullname" required>
+        <div class="basis-1/2 flex flex-col items-center justify-center gap-10">
+            <p class="text-center">Please check your inbox to verify your account</p>
         </div>
-        <div class="signup-field">
-            <label for="phone">Phone</label>
-            <input type="phone" [(ngModel)]="phone" name="phone" required>
-        </div>
-        <div class="signup-field">
-            <label for="email">Email</label>
-            <input type="email" [(ngModel)]="email" name="email" required>
-        </div>
-        <div class="signup-field button">
-            <button class="signup-button" type="submit">Sign up</button>
-        </div>
-    </form>
+    </div>
 </div>
 

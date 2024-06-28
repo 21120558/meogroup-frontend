@@ -1,29 +1,32 @@
-.signup-container {
+.complete-regis-container {
     background-color: var(--neutral-90);
 }
 
-.signup-logo {
+.complete-regis-logo {
     width: auto;
     height: 45px;
 }
 
-.signup-welcome {
+.complete-regis-welcome {
     font-size: 22px;
     font-weight: 500;
     color: var(--neutral-30);
 }
 
-.signup-form-container {
+.complete-regis-form-container {
+}
+
+.complete-regis-info-container {
     padding: 28px 0px;
 }
 
-.signup-form label {
+.complete-regis-form label {
     color: var(--primary-60);
     font-weight: 500;
     font-size: 18px;
 }
 
-.signup-form input {
+.complete-regis-form input {
     margin: 0px;
     padding: 0px;
     background-color: var(--neutral-90);
@@ -32,44 +35,39 @@
     color: var(--neutral-10);
 }
 
-.signup-field {
+.complete-regis-field {
     display: flex;
     flex-direction: column;
     flex: 0.3;
 }
 
-.signup-field-logo {
+.complete-regis-field-logo {
     height: 16px;
     width: auto;
     margin-left: 6px;
     margin-right: 12px;
 }
 
-.signup-pass,
-.signup-repass {
-    width: calc(50% - 12px);
-}
-
-.signup-password-field, 
-.signup-field:not(.button) {
+.complete-regis-field:not(.button) {
     width: 72%;
 }
 
-.signup-password-field {
+.complete-regis-password-field {
     gap: 12px;
 }
 
-.signup-form input:focus {
+.complete-regis-form input:focus {
     outline: none;
     color: var(--neutral-10);
 }
 
 
-.signup-forgot-button:hover {
+.complete-regis-forgot-button:hover {
     color: var(--primary-color)
 }
 
-.signup-button {
+.next-button,
+.complete-button {
     background-color: var(--neutral-30);
     color: var(--primary-70);
     padding: 6px 26px;
@@ -77,19 +75,26 @@
     font-weight: 500;
     transition: 0.4s ease all;
     margin-top: 24px;
+    cursor: pointer;
 }
 
-.signup-button:hover {
+.next-button:hover,
+.complete-button:hover {
     color: var(--primary-90)
 }
 
-.signup-field-placeholder {
+.complete-regis-field-placeholder,
+.complete-regis-avatar-placeholder {
     height: 24px;
-
 }
 
-.signup-field-warning {
-    background-color: var(--primary-90);
+.complete-regis-avatar-placeholder {
+    width: 50%;
+}
+
+.complete-regis-field-warning,
+.complete-regis-avatar-warning {
+    background-color: var(--primary-80);
     height: 100%;
     font-size: 14px;
     display: flex;
@@ -97,11 +102,15 @@
     justify-content: center;
 }
 
-.signup-field-instructor {
+.complete-regis-avatar-warning {
+    border-radius: 10px;
+}
+
+.complete-regis-field-instructor {
     font-size: 14px;
 }
 
-.signup-field-input {
+.complete-regis-field-input {
     border-bottom: solid 2px var(--neutral-40);
     display: flex;
     flex-direction: row;
@@ -111,39 +120,64 @@
     transition: 0.4s ease all;
 }
 
-.signup-field-input--focus {
+.complete-regis-field-input--focus {
     border-bottom: solid 2px var(--primary-60);
 }
 
-.signup-field-checklogo,
-.signup-field-errorlogo {
+.complete-regis-field-checklogo,
+.complete-regis-field-errorlogo {
     margin: 0px 12px;
 }
 
-.signup-thanksfor {
-    height: 250px;
-    width: auto;
+.complete-regis-noti-upload {
+    font-size: 28px;
+    color: var(--primary-60);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 12px;
 }
 
-.signup-sent_noti {
+.complete-regis-avatar-container {
+}
+
+.complete-regis-avatar-uploadlogo {
+    height: 112px;
+    width: auto;
+    opacity: 0.7;
+}
+
+.complete-regis-avatar {
+    background-color: var(--primary-90);
+    background-size: contain;
+    border-radius: 50%;
+    height: 225px;
+    width: 225px;
+    cursor: pointer;
+    border: solid 1px var(--primary-60);
+}
+
+.complete-button {
+    margin-top: 28px;
+}
+
+.complete-regis-sent_noti {
     border-bottom: solid 2px var(--primary-60);
     padding: 0px 20px 20px;
 }
 
-.signup-noti-logo {
+.complete-regis-noti-logo {
     height: 172px;
     width: auto;
 }
 
-.signup-noti-sent {
+.complete-regis-noti-sent {
     font-size: 38px;
     line-height: 3rem;
     font-weight: 500;
     color: var(--primary-60)
 }
 
-.signup-container-noti {
+.complete-regis-container-noti {
     border-bottom: solid 2px var(--primary-60);
     padding: 0px 16px 24px 16px;
 }
-
